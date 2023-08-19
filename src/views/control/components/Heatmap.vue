@@ -26,10 +26,13 @@ const theme: EchartOptions["theme"] = computed(() => {
 
 const showAxis = toRef(props.showAxis);
 
-const barChartRef = ref<HTMLDivElement | null>(null);
-const { setOptions, resize } = useECharts(barChartRef as Ref<HTMLDivElement>, {
-  theme
-});
+const heatmapChartRef = ref<HTMLDivElement | null>(null);
+const { setOptions, resize } = useECharts(
+  heatmapChartRef as Ref<HTMLDivElement>,
+  {
+    theme
+  }
+);
 
 setOptions(
   {
@@ -103,5 +106,5 @@ watch(
 </script>
 
 <template>
-  <div ref="barChartRef" style="width: 100%; height: 500px" />
+  <div ref="heatmapChartRef" style="width: 100%; height: 500px" />
 </template>

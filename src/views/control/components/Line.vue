@@ -7,6 +7,7 @@ import {
   useECharts,
   type EchartOptions
 } from "@pureadmin/utils";
+
 const props = defineProps({
   showMarkLine: {
     type: Boolean
@@ -21,7 +22,7 @@ const props = defineProps({
     type: Array
   }
 });
-
+console.log("data: ", props.data);
 const { isDark } = useDark();
 console.log("pieces", props.pieces);
 
@@ -92,6 +93,8 @@ watch(
   [
     () => props.showMarkLine,
     () => props.tabPosition,
+    () => props.pieces,
+
     () => useAppStoreHook().getSidebarStatus
   ],
   () => {

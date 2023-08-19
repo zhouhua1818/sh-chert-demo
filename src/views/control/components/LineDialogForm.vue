@@ -1,33 +1,49 @@
 <script setup lang="ts">
 import { ref, watch, reactive } from "vue";
 import { message } from "@/utils/message";
-import { FormInstance } from "element-plus";
-
-const INITIAL_DATA = {
-  pieces: [{ key: 1, gt: 0, lte: 1, color: "#409EFF" }]
-};
+import type { FormInstance } from "element-plus";
+import { PiecesItemProps } from "./utils/types";
 
 const props = defineProps({
+  data: {
+    type: Object
+  },
   visible: {
     type: Boolean,
     default: false
   }
 });
 
-const piecesFormRef = ref<FormInstance>();
+const emit = defineEmits([
+  "update:visible",
+  "add-pieces",
+  "del-pieces",
+  "submit-form"
+]);
+const formRef = ref<FormInstance>();
 const formVisible = ref(false);
-const formData = reactive({ ...INITIAL_DATA });
+const dynamicValidateForm = reactive(props.data);
+console.log("dynamicValidateForm: ", dynamicValidateForm);
 
-const submitForm = async (formEl: FormInstance | undefined) => {
+const handleDel = (item: PiecesItemProps) => {
+  emit("del-pieces", item);
+};
+
+const handleAdd = () => {
+  emit("add-pieces");
+};
+
+const submitForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return;
-  await formEl.validate(valid => {
+  formEl.validate(valid => {
     if (valid) {
-      console.log("valid: ", valid);
-      emit("submit-form", formData);
-      console.log(formData);
+      console.log("dynamicValidateForm", dynamicValidateForm);
+      emit("submit-form", dynamicValidateForm);
       message("提交成功", { type: "success" });
       formVisible.value = false;
-      resetForm(formEl);
+    } else {
+      console.log("error submit!");
+      return false;
     }
   });
 };
@@ -39,28 +55,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
 
 const closeDialog = () => {
   formVisible.value = false;
-  resetForm(piecesFormRef.value);
-};
-
-const emit = defineEmits(["update:visible", "submit-form"]);
-
-const handleAdd = () => {
-  // emit("add-pieces");
-  const addFormItem = {
-    key: Date.now(),
-    gt: 0,
-    lte: 1,
-    color: "#409EFF"
-  };
-  formData.pieces?.push(addFormItem);
-};
-
-const handleDel = item => {
-  console.log("handledelPieces: ", item);
-  const index = formData.pieces.indexOf(item);
-  if (index !== -1) {
-    formData.pieces.splice(index, 1);
-  }
+  resetForm(formRef);
 };
 
 watch(
@@ -77,12 +72,12 @@ watch(
   }
 );
 
-// watch(
-//   () => props.data,
-//   val => {
-//     formData.value = val;
-//   }
-// );
+watch(
+  () => props.data,
+  val => {
+    dynamicValidateForm.value = val;
+  }
+);
 </script>
 
 <template>
@@ -93,8 +88,17 @@ watch(
     draggable
     :before-close="closeDialog"
   >
-    <el-form :inline="true" ref="piecesFormRef" :model="formData" size="small">
-      <template v-for="(item, index) in formData.pieces" :key="index">
+    <el-form
+      ref="formRef"
+      :inline="true"
+      :model="dynamicValidateForm"
+      size="small"
+      class="demo-dynamic"
+    >
+      <template
+        v-for="(item, index) in dynamicValidateForm.pieces"
+        :key="item.key"
+      >
         <el-form-item
           label="起始值"
           :prop="'pieces.' + index + '.gt'"
@@ -111,7 +115,7 @@ watch(
           :prop="'pieces.' + index + '.lte'"
           :rules="{
             required: true,
-            message: '起始值必须填',
+            message: '结束值必须填',
             trigger: 'blur'
           }"
         >
@@ -121,21 +125,17 @@ watch(
           <el-color-picker v-model="item.color" />
         </el-form-item>
         <el-form-item>
-          <el-button type="danger" class="mt-2" @click="handleDel(item)"
-            >删除</el-button
-          >
+          <el-button type="danger" @click="handleDel(item)">删除</el-button>
         </el-form-item>
       </template>
+      <el-form-item>
+        <el-button @click="handleAdd">新增</el-button>
+      </el-form-item>
     </el-form>
 
-    <el-row>
-      <el-button type="primary" @click="handleAdd">添加</el-button>
-    </el-row>
     <template #footer>
       <el-button @click="closeDialog">取消</el-button>
-      <el-button type="primary" @click="submitForm(piecesFormRef)">
-        确定
-      </el-button>
+      <el-button type="primary" @click="submitForm(formRef)"> 确定 </el-button>
     </template>
   </el-dialog>
 </template>
