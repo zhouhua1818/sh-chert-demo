@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import { ref, onMounted, reactive, watch } from "vue";
+import { getLineList } from "@/api/chartList";
+import { onMounted, reactive, ref, watch } from "vue";
 import Line from "./components/Line.vue";
-import { getLineList } from "@/api/chertList";
 import dialogForm from "./components/LineDialogForm.vue";
 import { PiecesItemProps } from "./utils/types";
-let now = new Date(2015, 2, 24);
-const oneDay = 24 * 3600 * 1000;
+
 defineOptions({
   name: "LinePage"
 });
@@ -18,11 +17,14 @@ const INITIAL_DATA = {
     { key: 4, gt: 150, lte: 200, color: "#FD0100" }
   ]
 };
-
+const lineChartRef = ref<HTMLDivElement | null>(null);
 const loading = ref<boolean>(true);
 const showMarkLine = ref<boolean>(true);
-const dataList = reactive([]);
-let timeData = reactive<string>([]);
+const state = reactive({
+  dataList: [],
+  timeData: []
+});
+
 let formData = reactive<{
   pieces: PiecesItemProps[];
 }>({ ...INITIAL_DATA });
@@ -44,16 +46,16 @@ const formDialogVisible = ref(false);
 // 显示隐藏辅助线
 watch([showMarkLine, markLine], newVal => {
   loading.value = true;
-  dataList[0].markLine = newVal ? markLine : {};
+  state.dataList[0].markLine = newVal ? markLine : {};
 
   setTimeout(() => {
     loading.value = false;
   }, 10);
 });
 
-// watch(num, val => {
-//   markLine.data[0].yAxis = val;
-// });
+watch(state.data, val => {
+  state.timeData = val[0].data.map(item => item[0]);
+});
 // 获取数据
 const getLineListData = async () => {
   try {
@@ -65,10 +67,10 @@ const getLineListData = async () => {
         type: "line",
         data: item.data
       };
-      dataList.push(obj);
+      state.dataList.push(obj);
     });
-    dataList[0].markLine = markLine;
-    timeData = data.list[0].data.map(item => item[0]);
+    state.dataList[0].markLine = markLine;
+    state.timeData = data.list[0].data.map(item => item[0]);
   } catch (e) {
     console.log(e);
   } finally {
@@ -121,27 +123,8 @@ const submitForm = data => {
   }, 10);
 };
 
-const randomData = () => {
-  now = new Date(+now + oneDay);
-  return [
-    [now.getFullYear(), now.getMonth() + 1, now.getDate()].join("-"),
-    100
-  ];
-};
-
-onMounted(() => {
-  getLineListData();
-
-  setInterval(function () {
-    for (let i = 0; i < 1; i++) {
-      dataList[0].data.shift();
-      dataList[0].data.push(randomData());
-      dataList[1].data.shift();
-      dataList[1].data.push(randomData());
-    }
-    console.log("123", dataList);
-    timeData = dataList[0].data.map(item => item[0]);
-  }, 10000);
+onMounted(async () => {
+  await getLineListData();
 });
 </script>
 
@@ -213,9 +196,10 @@ onMounted(() => {
               }"
             >
               <Line
+                ref="lineChartRef"
                 :showMarkLine="showMarkLine"
-                :timeData="timeData"
-                :data="dataList"
+                :timeData="state.timeData"
+                :data="state.dataList"
                 :pieces="formData.pieces"
               />
             </div>

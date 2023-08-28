@@ -6,21 +6,25 @@ defineOptions({
   name: ""
 });
 const loading = ref<boolean>(false);
-const list = reactive([
-  { id: 1, count: 1, data: [60, 20, 80], tabPosition: "lr", loading: false },
-  { id: 2, count: 3, data: [10, 20, 80], tabPosition: "lr", loading: false }
-]);
-const defaultColor = reactive<Array<[number, string]>>([
-  [0.3, "#39b50c"],
-  [0.7, "#37a2da"],
-  [1, "#fd666d"]
-]);
+const state = reactive({
+  list: [
+    { id: 1, count: 1, data: [60, 20, 80], tabPosition: "lr", loading: false },
+    { id: 2, count: 3, data: [10, 20, 80], tabPosition: "lr", loading: false },
+    { id: 2, count: 3, data: [10, 20, 80], tabPosition: "lr", loading: false },
+    { id: 2, count: 3, data: [10, 20, 80], tabPosition: "lr", loading: false }
+  ],
+  defaultColor: [
+    [0.3, "#39b50c"],
+    [0.7, "#37a2da"],
+    [1, "#fd666d"]
+  ]
+});
 
 const handleChange = (value: string | number | boolean, item, type: string) => {
   item.loading = true;
   item[type] = value;
-  const index = list.findIndex(a => a.id == item.id);
-  list.splice(index, item);
+  const index = state.list.findIndex(a => a.id == item.id);
+  state.list.splice(index, item);
   setTimeout(() => {
     item.loading = false;
   }, 10);
@@ -28,7 +32,7 @@ const handleChange = (value: string | number | boolean, item, type: string) => {
 
 const colorChange = (value: string, index) => {
   loading.value = true;
-  defaultColor[index][1] = value;
+  state.defaultColor[index][1] = value;
   setTimeout(() => {
     loading.value = false;
   }, 10);
@@ -38,7 +42,7 @@ const colorChange = (value: string, index) => {
 <template>
   <el-row :gutter="24">
     <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-      <span v-for="(item, i) in defaultColor" :key="i" class="ml-12">
+      <span v-for="(item, i) in state.defaultColor" :key="i" class="ml-12">
         <span class="demonstration"
           >{{ i == 0 ? "安全色" : i == 1 ? "正常色" : "危险色" }}:</span
         >
@@ -46,13 +50,13 @@ const colorChange = (value: string, index) => {
       </span>
     </el-col>
     <el-col
-      v-for="(item, i) in list"
+      v-for="(item, i) in state.list"
       :key="i"
       :xs="24"
       :sm="24"
-      :md="8"
-      :lg="8"
-      :xl="8"
+      :md="24"
+      :lg="12"
+      :xl="12"
       class="mb-[18px]"
       v-motion
       :initial="{
@@ -95,13 +99,14 @@ const colorChange = (value: string, index) => {
                 :style="{
                   width:
                     item.tabPosition == 'lr' ? 100 / item.count + '%' : '100%',
-                  background: `url('https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100') no-repeat`
+                  background: `url('https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100') no-repeat`,
+                  'background-size': 'cover'
                 }"
                 v-for="(a, j) in item.count"
                 :key="j"
               >
                 <Gauge
-                  :color="defaultColor"
+                  :color="state.defaultColor"
                   :count="item.count"
                   :tabPosition="item.tabPosition"
                   :data="item.data[j] || 0"

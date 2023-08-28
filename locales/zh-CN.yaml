@@ -37,6 +37,7 @@ menus:
   line: 折线图
   barBrush: 柱状图
   heatmap: 热力图
+  bar3D: 3D柱状图
 status:
   hsLoad: 加载中...
 login:

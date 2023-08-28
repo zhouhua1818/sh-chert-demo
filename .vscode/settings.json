@@ -19,7 +19,8 @@
     "strings": true
   },
   "files.associations": {
-    "editor.snippetSuggestions": "top"
+    "editor.snippetSuggestions": "top",
+    "*.vue": "vue"
   },
   "[css]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"

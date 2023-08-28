@@ -41,6 +41,14 @@ export default {
       meta: {
         title: $t("menus.barBrush")
       }
+    },
+    {
+      path: "/control/bar3D",
+      name: "Bar3D",
+      component: () => import("@/views/control/bar3D.vue"),
+      meta: {
+        title: $t("menus.bar3D")
+      }
     }
   ]
 } as RouteConfigsTable;

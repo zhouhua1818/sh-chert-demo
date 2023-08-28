@@ -8,6 +8,8 @@ import {
   GaugeChart,
   HeatmapChart
 } from "echarts/charts";
+import { Bar3DChart } from "echarts-gl/charts";
+import { Grid3DComponent } from "echarts-gl/components";
 import {
   GridComponent,
   TitleComponent,
@@ -30,6 +32,7 @@ use([
   LineChart,
   GaugeChart,
   HeatmapChart,
+  Bar3DChart,
   CanvasRenderer,
   GridComponent,
   TitleComponent,
@@ -41,7 +44,8 @@ use([
   VisualMapComponent,
   MarkLineComponent,
   MarkPointComponent,
-  MarkAreaComponent
+  MarkAreaComponent,
+  Grid3DComponent
 ]);
 
 /**
