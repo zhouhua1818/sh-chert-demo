@@ -17,43 +17,43 @@ const INITIAL_DATA = {
     { key: 4, gt: 150, lte: 200, color: "#FD0100" }
   ]
 };
+const state = reactive({
+  dataList: [],
+  timeData: [],
+  markLine: {
+    lineStyle: {
+      color: "#409EFF",
+      width: 1,
+      type: "solid"
+    },
+    data: [
+      {
+        yAxis: 250 // 分割线的位置
+      }
+    ]
+  }
+});
 const lineChartRef = ref<HTMLDivElement | null>(null);
 const loading = ref<boolean>(true);
 const showMarkLine = ref<boolean>(true);
-const state = reactive({
-  dataList: [],
-  timeData: []
-});
-
+const num = ref<number>(state.markLine.data[0].yAxis); //辅助线数值
+// 弹窗
+const formDialogVisible = ref(false);
 let formData = reactive<{
   pieces: PiecesItemProps[];
 }>({ ...INITIAL_DATA });
-const markLine = reactive({
-  lineStyle: {
-    color: "#409EFF",
-    width: 1,
-    type: "solid"
-  },
-  data: [
-    {
-      yAxis: 250 // 分割线的位置
-    }
-  ]
-});
-const num = ref<number>(markLine.data[0].yAxis); //辅助线数值
-// 弹窗
-const formDialogVisible = ref(false);
+
 // 显示隐藏辅助线
-watch([showMarkLine, markLine], newVal => {
+watch([showMarkLine, state.markLine], newVal => {
   loading.value = true;
-  state.dataList[0].markLine = newVal ? markLine : {};
+  state.dataList[0].markLine = newVal ? state.markLine : {};
 
   setTimeout(() => {
     loading.value = false;
   }, 10);
 });
 
-watch(state.data, val => {
+watch(state.dataList, val => {
   state.timeData = val[0].data.map(item => item[0]);
 });
 // 获取数据
@@ -61,15 +61,31 @@ const getLineListData = async () => {
   try {
     const { data } = await getLineList();
     console.log("data: ", data);
+    const arr = [];
     data.list.forEach(item => {
       const obj = {
         name: item.name,
         type: "line",
-        data: item.data
+        data: item.data,
+        endLabel: {
+          show: true,
+          formatter: function (params) {
+            return item.name + ": " + params.value[1];
+          }
+        }
       };
       state.dataList.push(obj);
+      const { data } = item;
+      data.forEach(element => {
+        arr.push(element[1]);
+      });
     });
-    state.dataList[0].markLine = markLine;
+    // 获取最大值
+    const max = arr.reduce((a, b) => (a > b ? a : b));
+    const last = formData.pieces.pop();
+    last.lte = max;
+    formData.pieces.splice(3, 1, last);
+    state.dataList[0].markLine = state.markLine;
     state.timeData = data.list[0].data.map(item => item[0]);
   } catch (e) {
     console.log(e);
@@ -88,9 +104,9 @@ const changeMarkLine = (value, type: string) => {
   console.log(value);
   if (type == "yAxis") {
     num.value = value.target.value;
-    markLine.data[0].yAxis = num;
+    state.markLine.data[0].yAxis = num.value;
   } else {
-    markLine.lineStyle[type] = value;
+    state.markLine.lineStyle[type] = value;
   }
 };
 
@@ -154,7 +170,7 @@ onMounted(async () => {
               /></span>
               <span class="mr-1">
                 颜色：<el-color-picker
-                  v-model="markLine.lineStyle.color"
+                  v-model="state.markLine.lineStyle.color"
                   @change="changeMarkLine($event, 'color')"
                   size="small"
               /></span>
@@ -162,13 +178,13 @@ onMounted(async () => {
                 粗细：<el-input-number
                   :min="1"
                   controls-position="right"
-                  v-model="markLine.lineStyle.width"
+                  v-model="state.markLine.lineStyle.width"
                   @change="changeMarkLine($event, 'width')"
                   size="small"
               /></span>
               <span class="mr-1">
                 <el-radio-group
-                  v-model="markLine.lineStyle.type"
+                  v-model="state.markLine.lineStyle.type"
                   label="线性："
                   size="small"
                   @change="changeMarkLine($event, 'type')"

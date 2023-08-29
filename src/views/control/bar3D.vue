@@ -42,15 +42,15 @@ const getData = async () => {
 };
 
 const checkChange = (value, i) => {
-  loading.value = true;
+  // loading.value = true;
   console.log("checkChange: ", value, i);
   state.checkList[i].value = value;
   const arr = state.checkList.filter(item => !item.value).map(e => e.name);
   state.dataList = state.originList.filter(e => !arr.includes(e[3]));
   console.log("state.dataList: ", state.dataList);
-  setTimeout(() => {
-    loading.value = false;
-  }, 100);
+  // setTimeout(() => {
+  //   loading.value = false;
+  // }, 100);
 };
 
 onMounted(async () => {

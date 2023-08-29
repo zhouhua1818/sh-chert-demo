@@ -42,6 +42,7 @@ const options = reactive({
   xAxis: {
     data: timeData
   },
+  animationDuration: 5000,
   legend: {},
   yAxis: {},
   toolbox: {
@@ -67,7 +68,7 @@ const options = reactive({
     right: 10,
     pieces: props.pieces,
     outOfRange: {
-      color: "#409EFF"
+      color: "#fff"
     }
   },
   series: data

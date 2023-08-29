@@ -79,15 +79,13 @@ watch(
   () => props.data,
   async val => {
     await clear();
+    showLoading({ type: "" });
     state.data = val;
     options.dataset.source = val;
-    showLoading();
     setTimeout(() => {
       setOptions(options);
       hideLoading();
-    }, 1000);
-
-    // console.log(getInstance());
+    }, 500);
   }
 );
 onUnmounted(() => {

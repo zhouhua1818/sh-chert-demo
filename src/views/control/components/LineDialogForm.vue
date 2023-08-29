@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref, watch, reactive } from "vue";
 import { message } from "@/utils/message";
 import type { FormInstance } from "element-plus";
-import { PiecesItemProps } from "./utils/types";
+import { reactive, ref, watch } from "vue";
+import type { PiecesItemProps } from "../utils/types";
 
 const props = defineProps({
   data: {
@@ -55,7 +55,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
 
 const closeDialog = () => {
   formVisible.value = false;
-  resetForm(formRef);
+  resetForm(formRef.value);
 };
 
 watch(

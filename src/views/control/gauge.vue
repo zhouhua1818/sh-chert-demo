@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { reactive, ref } from "vue";
 import Gauge from "./components/Gauge.vue";
-import { reactive } from "vue";
 defineOptions({
   name: ""
 });
