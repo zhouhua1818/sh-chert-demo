@@ -1,28 +1,30 @@
-import type { App } from "vue";
-import * as echarts from "echarts/core";
-import { CanvasRenderer } from "echarts/renderers";
-import {
-  PieChart,
-  BarChart,
-  LineChart,
-  GaugeChart,
-  HeatmapChart
-} from "echarts/charts";
 import { Bar3DChart } from "echarts-gl/charts";
 import { Grid3DComponent } from "echarts-gl/components";
 import {
-  GridComponent,
-  TitleComponent,
-  LegendComponent,
-  GraphicComponent,
-  ToolboxComponent,
-  TooltipComponent,
+  BarChart,
+  GaugeChart,
+  HeatmapChart,
+  LineChart,
+  PieChart,
+  ScatterChart
+} from "echarts/charts";
+import {
+  CalendarComponent,
   DataZoomComponent,
-  VisualMapComponent,
+  GraphicComponent,
+  GridComponent,
+  LegendComponent,
+  MarkAreaComponent,
   MarkLineComponent,
   MarkPointComponent,
-  MarkAreaComponent
+  TitleComponent,
+  ToolboxComponent,
+  TooltipComponent,
+  VisualMapComponent
 } from "echarts/components";
+import * as echarts from "echarts/core";
+import { CanvasRenderer } from "echarts/renderers";
+import type { App } from "vue";
 
 const { use } = echarts;
 
@@ -32,6 +34,7 @@ use([
   LineChart,
   GaugeChart,
   HeatmapChart,
+  ScatterChart,
   Bar3DChart,
   CanvasRenderer,
   GridComponent,
@@ -45,6 +48,7 @@ use([
   MarkLineComponent,
   MarkPointComponent,
   MarkAreaComponent,
+  CalendarComponent,
   Grid3DComponent
 ]);
 

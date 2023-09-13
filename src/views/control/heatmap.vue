@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import hotImage from "@/assets/cad.jpg";
+import { data } from "@/utils/mockData";
+import { reactive, ref } from "vue";
 import Heatmap from "./components/Heatmap.vue";
-import { reactive } from "vue";
 defineOptions({
   name: ""
 });
-import { data } from "@/utils/mockData";
 console.log("data: ", data);
 
 const loading = ref<boolean>(false);
@@ -37,12 +37,10 @@ const handleChange = value => {
           <div
             v-if="!loading"
             :style="{
-              width: '100%',
-              background: `url('https://newoss.zhulong.com/forum/201911/02/44/212144ryntsk1dhmogq6kl.jpg') no-repeat`,
-              backgroundPosition: '1px -40px'
+              width: '100%'
             }"
           >
-            <Heatmap :showAxis="showAxis" :data="dataList" />
+            <Heatmap :showAxis="showAxis" :data="dataList" :image="hotImage" />
           </div>
         </div>
       </template>

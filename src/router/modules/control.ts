@@ -49,6 +49,22 @@ export default {
       meta: {
         title: $t("menus.bar3D")
       }
+    },
+    {
+      path: "/control/calendarPie",
+      name: "Pie",
+      component: () => import("@/views/control/calendarPie.vue"),
+      meta: {
+        title: $t("menus.calendarPie")
+      }
+    },
+    {
+      path: "/control/calendar",
+      name: "calendar",
+      component: () => import("@/views/control/calendar.vue"),
+      meta: {
+        title: $t("menus.calendar")
+      }
     }
   ]
 } as RouteConfigsTable;

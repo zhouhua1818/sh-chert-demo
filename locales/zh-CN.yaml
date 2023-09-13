@@ -38,6 +38,8 @@ menus:
   barBrush: 柱状图
   heatmap: 热力图
   bar3D: 3D柱状图
+  calendarPie: 传感器统计数据日历饼图
+  calendar: 掘进进度
 status:
   hsLoad: 加载中...
 login:

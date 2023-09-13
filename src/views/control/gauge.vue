@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import userAvatar from "@/assets/user.jpg";
 import { reactive, ref } from "vue";
 import Gauge from "./components/Gauge.vue";
 defineOptions({
@@ -97,9 +98,9 @@ const colorChange = (value: string, index) => {
               <div
                 :style="{
                   width:
-                    item.tabPosition == 'lr' ? 100 / item.count + '%' : '100%',
-                  background: `url('https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100') no-repeat`,
-                  'background-size': 'cover'
+                    item.tabPosition == 'lr' ? 100 / item.count + '%' : '100%'
+                  // background: `url('https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100') no-repeat`,
+                  // 'background-size': 'cover'
                 }"
                 v-for="(a, j) in item.count"
                 :key="j"
@@ -109,6 +110,7 @@ const colorChange = (value: string, index) => {
                   :count="item.count"
                   :tabPosition="item.tabPosition"
                   :data="item.data[j] || 0"
+                  :image="userAvatar"
                 />
               </div>
             </div>
